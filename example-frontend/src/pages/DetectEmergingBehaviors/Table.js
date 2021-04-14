@@ -51,7 +51,6 @@ function ReactVirtualizedGrid(props) {
   function cellRenderer({columnIndex, key, rowIndex, style}) {
     let newStyle;
 
-    console.log('style: ', style);
     if (rowIndex === 0) {
       newStyle = {
         // height: style.height,
