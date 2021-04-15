@@ -14,7 +14,7 @@ import {
   } from "@material-ui/core";
   
 import { Add as AddIcon } from '@material-ui/icons';
-
+import axios from 'axios';
 import { spacing } from "@material-ui/system";
 import { Alert as MuiAlert, AlertTitle } from '@material-ui/lab';
 import styled, { withTheme } from "styled-components";
@@ -40,7 +40,8 @@ class SatVis extends Component {
 
     state = {
         selected: [],
-        stations: []
+        stations: [],
+        alerts: []
     }
 
     componentDidMount() {
@@ -49,6 +50,12 @@ class SatVis extends Component {
             onStationClicked: this.handleStationClicked
         });
         this.addStations();
+        axios.get('https://mlpipeline.azurewebsites.net/getalerts')
+        .then((response) => {
+            console.log(response);
+        }, (error) => {
+            console.log('error: ', error);
+        });
 
         setInterval(this.handleTimer, 1000);
     }
@@ -125,7 +132,7 @@ class SatVis extends Component {
 
     addCelestrakSets = () => {
         //this.engine.loadLteFileStations(getCorsFreeUrl('http://www.celestrak.com/NORAD/elements/weather.txt'), 0x00ffff)
-        this.engine.loadLteFileStations(getCorsFreeUrl('http://www.celestrak.com/NORAD/elements/active.txt'), 0xffffff)
+        this.engine.loadLteFileStations('http://www.celestrak.com/NORAD/elements/active.txt', 0xffffff)
         //this.engine.loadLteFileStations(getCorsFreeUrl('http://www.celestrak.com/NORAD/elements/science.txt'), 0xffff00)
         //this.engine.loadLteFileStations(getCorsFreeUrl('http://www.celestrak.com/NORAD/elements/stations.txt'), 0xffff00)
         //this.engine.loadLteFileStations(getCorsFreeUrl('http://www.celestrak.com/NORAD/elements/cosmos-2251-debris.txt'), 0xff0000)
@@ -143,7 +150,7 @@ class SatVis extends Component {
     }
 
     addAmsatSets = () => {
-        this.engine.loadLteFileStations(getCorsFreeUrl('https://www.amsat.org/tle/current/nasabare.txt'), 0xffff00);
+        this.engine.loadLteFileStations('https://www.amsat.org/tle/current/nasabare.txt', 0xffff00);
     }
 
     handleTimer = () => {
@@ -188,7 +195,7 @@ class SatVis extends Component {
             title= "Active Alerts"
             />
             <CardContent>
-            <Alert mb={4} severity="error"
+            {/* <Alert mb={4} severity="error"
                 action={
                     <IconButton
                         aria-label="close"
@@ -258,7 +265,7 @@ class SatVis extends Component {
             >
             <AlertTitle>Debris Cloud Formation Resolved</AlertTitle>
             Debris cloud generation event found and cataloged
-            </Alert>
+            </Alert> */}
             </CardContent>
             </Card>
             </div>
