@@ -140,7 +140,7 @@ function DataTable(props) {
       };
       return (
         <div key={key} style={newStyle}>
-          {props.data[rowIndex][columnIndex]}
+          {props.data[0]}
         </div>
       );
     } else {
@@ -223,12 +223,13 @@ function DataTable(props) {
               rowCount={props.data.length}
               rowGetter={({index}) => props.data[index]}>
               {Object.keys(props.data[0]).map((column, index) => {
+                console.log('column: ', column)
                 if (!XY.includes(column)) {
                   if (!constants.includes(column)) {
                     return (
                       <Column
                         key={index}
-                        label={props.data[0][column]}
+                        label={column}
                         dataKey={column}
                         width={Object.keys(props.data[0]).length * 20}
                       />
