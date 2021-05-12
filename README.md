@@ -1,3 +1,2 @@
-# ml_workflow_framework
-Implementation of proposed ml_workflow_implementation
-Example Frontend is in example_frontend, the backend flask application is in example_backend
+#impara
+Impara is an open-source project intended to empower developers within the US Defense and Intelligence communities to go from raw data to mission-critical decision faster, using machine learning. 
