@@ -32,7 +32,8 @@ const Alert = styled(MuiAlert)(spacing);
   
 // Bypass CORS
 function getCorsFreeUrl(url) {
-    return 'https://cors-anywhere.herokuapp.com/' + url;
+    // return 'https://cors-anywhere.herokuapp.com/' + url;
+    return 'https://api.allorigins.win/raw?url=' + url; 
 }
 
 
@@ -50,7 +51,7 @@ class SatVis extends Component {
             onStationClicked: this.handleStationClicked
         });
         this.addStations();
-        axios.get('https://mlpipeline.azurewebsites.net/getalerts')
+        axios.get(getCorsFreeUrl('https://mlpipeline.azurewebsites.net/getalerts'))
         .then((response) => {
             console.log(response);
         }, (error) => {
@@ -132,7 +133,7 @@ class SatVis extends Component {
 
     addCelestrakSets = () => {
         //this.engine.loadLteFileStations(getCorsFreeUrl('http://www.celestrak.com/NORAD/elements/weather.txt'), 0x00ffff)
-        this.engine.loadLteFileStations('http://www.celestrak.com/NORAD/elements/active.txt', 0xffffff)
+        this.engine.loadLteFileStations(getCorsFreeUrl('http://www.celestrak.com/NORAD/elements/active.txt'), [0xffffff, 0xffff00])
         //this.engine.loadLteFileStations(getCorsFreeUrl('http://www.celestrak.com/NORAD/elements/science.txt'), 0xffff00)
         //this.engine.loadLteFileStations(getCorsFreeUrl('http://www.celestrak.com/NORAD/elements/stations.txt'), 0xffff00)
         //this.engine.loadLteFileStations(getCorsFreeUrl('http://www.celestrak.com/NORAD/elements/cosmos-2251-debris.txt'), 0xff0000)
@@ -143,14 +144,14 @@ class SatVis extends Component {
         //this.engine.loadLteFileStations(getCorsFreeUrl('http://www.celestrak.com/NORAD/elements/gps-ops.txt'), 0xffffff, { orbitMinutes: 0, satelliteSize: 200 })
         //this.engine.loadLteFileStations(getCorsFreeUrl('http://www.celestrak.com/NORAD/elements/glo-ops.txt'), 0xff0000, { orbitMinutes: 500, satelliteSize: 500 })
             .then(stations => {
+                console.log('stations: ', stations)
                 this.setState({stations});
                 this.processQuery(stations);
             });
-
     }
 
     addAmsatSets = () => {
-        this.engine.loadLteFileStations('https://www.amsat.org/tle/current/nasabare.txt', 0xffff00);
+        this.engine.loadLteFileStations(getCorsFreeUrl('https://www.amsat.org/tle/current/nasabare.txt'), 0xffffff);
     }
 
     handleTimer = () => {

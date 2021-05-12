@@ -95,7 +95,17 @@ const SatVis = async(() => import('../pages/sat/Satvis'))
 // Detect Emerging Behaviors 
 const DetectEmergingBehaviors = async(() => import("../pages/DetectEmergingBehaviors/DetectEmergingBehaviors"))
 
+// Models Page
+// const Models = async(() => import('../pages/Model/ModelDetails/ModelDetailsWrapper'));
+const Models = async(() => import("../pages/Model/ModelDetails/ModelDetailsWrapper"));
 
+const ModelsRoutes = {
+  id: "Models",
+  path: "/models",
+  icon: <Grid />,
+  component: Models,
+  children: null
+}
 const DetectEmergingBehaviorsRoutes = {
   id: "Detect Emerging Behaviors",
   path: "/deb",
@@ -429,6 +439,7 @@ const privateRoutes = {
 export const dashboard = [
   DetectEmergingBehaviorsRoutes,
   radarRoutes,
+  ModelsRoutes,
   satRoutes,
   profileRoutes,
   tasksRoutes,
@@ -440,6 +451,7 @@ export const auth = [authRoutes];
 
 export default [
   DetectEmergingBehaviorsRoutes,
+  ModelsRoutes,
   radarRoutes,
   satRoutes,
   profileRoutes,

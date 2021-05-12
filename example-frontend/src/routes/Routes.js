@@ -7,6 +7,7 @@ import AuthLayout from "../layouts/Auth";
 import Page404 from "../pages/auth/Page404";
 
 const childRoutes = (Layout, routes) =>
+  // console.log('routes: ', routes);
   routes.map(({ children, path, component: Component }, index) =>
     children ? (
       // Route item with children

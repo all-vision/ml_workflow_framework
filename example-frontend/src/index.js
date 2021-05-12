@@ -8,7 +8,7 @@ import App from './App';
 import { Provider } from 'react-redux';
 import store from './redux/store/index';
 
-import {HASURA_ENDPOINT, HASURA_SECRET_API_KEY} from './keys';
+// import {HASURA_ENDPOINT, HASURA_SECRET_API_KEY} from './keys';
 
 import {
   ApolloProvider,
@@ -20,8 +20,8 @@ import {
 import { WebSocketLink } from '@apollo/link-ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 
-// const HASURA_ENDPOINT = 'suitable-hedgehog-89.hasura.app/v1/graphql'
-// const HASURA_SECRET_API_KEY = 'v9MhgGMmEDvq0wkL7Uf7kjU0NAiLVQKpdGyGmRYhwHbj4njqIjFDWoqiuqoRO7H6'
+const HASURA_ENDPOINT = 'suitable-hedgehog-89.hasura.app/v1/graphql'
+const HASURA_SECRET_API_KEY = 'v9MhgGMmEDvq0wkL7Uf7kjU0NAiLVQKpdGyGmRYhwHbj4njqIjFDWoqiuqoRO7H6'
 
 const httpLink = new HttpLink({
   headers: {

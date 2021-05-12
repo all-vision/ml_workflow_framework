@@ -294,6 +294,7 @@ function Sidebar({ classes, staticContext, location, ...rest }) {
   };
 
   const [openRoutes, setOpenRoutes] = useState(() => initOpenRoutes());
+  console.log('openRoutes: ', openRoutes)
 
   const toggle = index => {
     // Collapse all elements
@@ -314,6 +315,7 @@ function Sidebar({ classes, staticContext, location, ...rest }) {
         <List disablePadding>
           <Items>
             {routes.map((category, index) => (
+              console.log('category: ', category),
               <React.Fragment key={index}>
                 {category.header ? (
                   <SidebarSection>{category.header}</SidebarSection>
@@ -336,6 +338,7 @@ function Sidebar({ classes, staticContext, location, ...rest }) {
                       unmountOnExit
                     >
                       {category.children.map((route, index) => (
+                        console.log('route: ', route),
                         <SidebarLink
                           key={index}
                           name={route.name}

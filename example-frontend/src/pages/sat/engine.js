@@ -110,9 +110,15 @@ export class Engine {
         const options = { ...defaultStationOptions, ...stationOptions };
 
         return fetch(url).then(res => {
-            return res.text().then(text => {
-                return this._addTleFileStations(text, color, options);
-            });
+            // return res.text().then(text => {
+            //     return this._addTleFileStations(text, color, options);
+            // });
+            if (res.ok) {
+                return res.text().then(text => {
+                    return this._addTleFileStations(text, color, options);
+
+                });
+            }
         });
     }
 
