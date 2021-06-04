@@ -66,7 +66,7 @@ function SignIn() {
         />
         <Button
           component={Link}
-          to="/radar"
+          to="/sat"
           fullWidth
           variant="contained"
           color="primary"
