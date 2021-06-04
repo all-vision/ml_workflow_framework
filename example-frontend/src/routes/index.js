@@ -99,6 +99,16 @@ const DetectEmergingBehaviors = async(() => import("../pages/DetectEmergingBehav
 // const Models = async(() => import('../pages/Model/ModelDetails/ModelDetailsWrapper'));
 const Models = async(() => import("../pages/Model/ModelDetails/ModelDetailsWrapper"));
 
+const BulkLabeling = async(() => import('../pages/BulkLabeling/BulkLabeling'));
+
+const BulkLabelingRoutes = {
+  id: 'Bulk Labeling',
+  path: '/bulk-labeling',
+  icon: <Grid />,
+  component: BulkLabeling,
+  children: null
+}
+
 const ModelsRoutes = {
   id: "Models",
   path: "/models",
@@ -106,13 +116,13 @@ const ModelsRoutes = {
   component: Models,
   children: null
 }
-const DetectEmergingBehaviorsRoutes = {
-  id: "Detect Emerging Behaviors",
-  path: "/deb",
-  icon: <Grid />,
-  component: DetectEmergingBehaviors,
-  children: null
-}
+// const DetectEmergingBehaviorsRoutes = {
+//   id: "Detect Emerging Behaviors",
+//   path: "/deb",
+//   icon: <Grid />,
+//   component: DetectEmergingBehaviors,
+//   children: null
+// }
 
 const radarRoutes = {
   id: "Real Time Sensor Feed",
@@ -345,11 +355,11 @@ const tablesRoutes = {
   path: "/tables",
   icon: <List />,
   children: [
-    {
-      path: "/tables/advanced-table",
-      name: "Radar Performance Playbook",
-      component: AdvancedTable
-    },
+    // {
+    //   path: "/tables/advanced-table",
+    //   name: "Radar Performance Playbook",
+    //   component: AdvancedTable
+    // },
     {
       path: "/tables/advanced-table1",
       name: "Satellite Event Playbook",
@@ -437,8 +447,9 @@ const privateRoutes = {
 };
 
 export const dashboard = [
-  DetectEmergingBehaviorsRoutes,
-  radarRoutes,
+  // DetectEmergingBehaviorsRoutes,
+  BulkLabelingRoutes,
+  // radarRoutes,
   ModelsRoutes,
   satRoutes,
   profileRoutes,
@@ -450,9 +461,10 @@ export const dashboard = [
 export const auth = [authRoutes];
 
 export default [
-  DetectEmergingBehaviorsRoutes,
+  // DetectEmergingBehaviorsRoutes,
+  BulkLabelingRoutes,
   ModelsRoutes,
-  radarRoutes,
+  // radarRoutes,
   satRoutes,
   profileRoutes,
   tasksRoutes,

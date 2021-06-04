@@ -23,7 +23,7 @@ function hexToRgbA(hex) {
     hexToRgbA('#e17055'), // orange
     hexToRgbA('#d63031'), // red
     hexToRgbA('#e84393'), // pink
-    hexToRgbA('#00cec9'), // turquoise
+    hexToRgbA('#9A6324'), // turquoise
     hexToRgbA('#55efc4'), // light green
     hexToRgbA('#74b9ff'), // light blue
     hexToRgbA('#a29bfe'), // light purple

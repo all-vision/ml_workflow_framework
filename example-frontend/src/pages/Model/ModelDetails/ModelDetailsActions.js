@@ -60,17 +60,6 @@ export default class ModelDetailsActions extends Component {
     return (
       <>
         <div className="model-details-actions-wrapper">
-          {/* <Button
-            variant="contained"
-            color="primary"
-            className="deploy-model-api"
-            onClick={this.props.handleOpenModal}
-          >
-            Deploy Model as API
-          </Button> */}
-          {/* {
-            this.props.clusters.length > 8
-              ? */}
           <FormControl
             style={{ maxWidth: 150, minWidth: 150 }}
             // error={this.props.selectedXValueIsNull}

@@ -8,7 +8,8 @@ import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import 'react-virtualized/styles.css';
 // import '../../styles/DEB/deb-table.css';
-import '../../../../../styles/ModelDetails/deb-table.css'
+// import '../../../../../styles/ModelDetails/deb-table.css'
+import '../../styles/ModelDetails/deb-table.css'
 
 const mapStateToProps = (state) => {
   return {
@@ -71,6 +72,12 @@ function DataTable(props) {
   };
   console.log('new table props: ', props);
 
+  useEffect(() => {
+    console.log('props: ', props)
+    let newTableData = [...props.data, ...props.selectedRowsByCheckbox];
+    console.log('newTableData: ', newTableData)
+    setTableData(newTableData)
+  }, [props.data, props.selectedRowsByCheckbox])
   // let columnHeaders = ['cluster', ...props.columnHeaders];
 
   useEffect(() => {
@@ -91,7 +98,6 @@ function DataTable(props) {
     }
 
     setFilteredByClusterString(newString.slice(0, -1));
-    console.log('real newString: ', newString.slice(0, -2));
   }, [props.selectedClusters]);
 
   // let items = [];
@@ -179,19 +185,20 @@ function DataTable(props) {
 
   }
 
-  if (!props.data.length > 0) {
+  if (!tableData.length > 0) {
     return (
       <Skeleton variant="rect" width={1000} height={200} />
     );
   }
   else {
+    // console.log('tableData: ', tableData)
     return (
       <>
         <div className="data-table-container">
           <div className="deb-table-header">
             <div style={{display: 'flex', flexDirection: 'column'}}>
-              <h1>Your Dataset</h1>
-              <p className='filtered-by-cluster-string'>{filteredByClusterString}</p>
+              <h1>Points Selected for Labeling</h1>
+              {/* <p className='filtered-by-cluster-string'>{filteredByClusterString}</p> */}
             </div>
             {/* {props.targetRow ? (
               <Button
@@ -214,22 +221,21 @@ function DataTable(props) {
           </div>
           <div className="data-table-wrapper">
             <Table
-              width={300 * Object.keys(props.data[0]).length}
+              width={300 * Object.keys(tableData[0]).length}
               // width={1500}
               height={300}
               rowClassName='table-row'
               headerHeight={50}
               rowHeight={50}
-              rowCount={props.data.length}
-              rowGetter={({index}) => props.data[index]}>
-                              <Column
+              rowCount={tableData.length}
+              rowGetter={({index}) => tableData[index]}>
+              <Column
                 // key={index}
                 label={'clusters'}
                 dataKey={'clusters'}
-                width={Object.keys(props.data[0]).length * 20}
+                width={Object.keys(tableData[0]).length * 20}
               />
-              {Object.keys(props.data[0]).map((column, index) => {
-                console.log('column: ', column)
+              {Object.keys(tableData[0]).map((column, index) => {
                 if (!XY.includes(column)) {
                   if (!constants.includes(column)) {
                     return (
@@ -237,7 +243,7 @@ function DataTable(props) {
                         key={index}
                         label={column}
                         dataKey={column}
-                        width={Object.keys(props.data[0]).length * 20}
+                        width={Object.keys(tableData[0]).length * 20}
                       />
                     );
                   } 
@@ -247,7 +253,7 @@ function DataTable(props) {
                         key={index}
                         label={column.toString()}
                         dataKey={column.toString()}
-                        width={Object.keys(props.data[0]).length * 10}
+                        width={Object.keys(tableData[0]).length * 10}
                       />
                     );
                   }

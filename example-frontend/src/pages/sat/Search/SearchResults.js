@@ -15,6 +15,8 @@ const filterResults = (stations, searchText) => {
 
     
 const SearchResults = ({stations, searchText, onResultClick}) => {
+    console.log('searchText: ', searchText)
+    console.log('stations: ', stations)
     const results = filterResults(stations, searchText);
     if (!results) return null;
 

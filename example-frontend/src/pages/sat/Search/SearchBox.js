@@ -5,6 +5,7 @@ export default ({value, onChange}) => {
         <input 
             className='SearchBox' 
             value={value} 
+            style={{border: '1px solid red'}}
             onChange={e => onChange && onChange(e.target.value)} 
             placeholder='Search Satellites'
         />
