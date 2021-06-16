@@ -21,7 +21,7 @@ const defaultOptions = {
 
 const defaultStationOptions = {
   orbitMinutes: 0,
-  satelliteSize: 75, // default = 50
+  satelliteSize: 100, // default = 50
 };
 
 export class Engine {

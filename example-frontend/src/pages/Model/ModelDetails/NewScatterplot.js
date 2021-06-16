@@ -66,6 +66,9 @@ function Scatterplot(props) {
       height: 550,
       reflow: false,
       animation: false,
+      credits: {
+        enabled: false
+      },
       style: {
         fontFamily: 'Open Sans',
       },

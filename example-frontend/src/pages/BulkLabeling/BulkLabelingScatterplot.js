@@ -252,7 +252,6 @@ function selectPointsByDrag(e) {
       series: {
         // stickyTracking: props.chartData[0].length > 100  ? true : false,
         stickyTracking: false,
-        boostThreshold: 500,
         scatter: {
           animation: false,
           enableMouseTracking: false,
@@ -261,6 +260,7 @@ function selectPointsByDrag(e) {
           dataLabels: { style: { textShadow: false } },
         },
         marker: {
+          radius: 3,
           states: {
               select: {
                   fillColor: 'rgba(0,0,0,.1)',
