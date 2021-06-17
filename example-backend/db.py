@@ -46,14 +46,6 @@ class MutableList(Mutable, list):
             return value
 
 
-class User(Base):
-    __tablename__ = "UsersTable"
-    __table_args__ = {"autoload": True, "autoload_with": engine}
-
-    UserID = Column(Integer, primary_key=True)
-    Name = Column(String, nullable=False)
-    Email = Column(String, nullable=False, unique=True)
-    DatasetIDs = Column(MutableList.as_mutable(ARRAY(UUID(as_uuid=True))))
 
 
 class Dataset(Base):
@@ -84,6 +76,30 @@ class Dataset(Base):
         self.Location = dataset_location
         self.UploadDate = datetime.datetime.now()
         self.Coordinates = coordinates
+
+class Model(Base):
+    __tablename__ = "ModelsTable"
+    __table_args__ = {"autoload": True, "autoload_with": engine}
+
+    DatasetID = Column(ARRAY(UUID(as_uuid=True)), nullable=False)
+    ModelName = Column(String, nullable=False)
+    ClusteringColumn = Column(ARRAY(JSON))
+    ModelScores = Column(ARRAY(JSON))
+    ModelHyperparameters = Column(ARRAY(JSON))
+
+    def __init__(
+        self,
+        datasetID,
+        modelName,
+        clusteringColumn,
+        modelScores,
+        modelHyperparameters,
+    ):
+        self.DatasetID = datasetID
+        self.ModelName = modelName
+        self.ClusteringColumn = clusteringColumn
+        self.ModelScores = modelScores
+        self.ModelHyperparameters = modelHyperparameters
 
 class Model(Base):
     __tablename__ = "ModelsTable"

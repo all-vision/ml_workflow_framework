@@ -72,7 +72,7 @@ def generate_event_mapping():
     if not requestData:
         return jsonify(status=412)
     event = requestData["event"]
-    
+    events
 
 
 
