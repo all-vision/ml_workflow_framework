@@ -670,7 +670,7 @@ class SatVis extends Component {
           style={{
             marginTop: '2vh',
             marginBottom: '1vh',
-            display: 'flex',
+            // display: 'flex',
           }}
         >
           <ToggleButtonGroup
@@ -686,15 +686,13 @@ class SatVis extends Component {
               3D-View
             </ToggleButton>
           </ToggleButtonGroup>
-          <span
+          <div
             style={{
               display:
                 this.state.contentView === 'scatterplot' ? 'flex' : 'none',
             }}
           >
-            <FormControl
-              style={{ maxWidth: 150, minWidth: 150, marginLeft: '1.5vw' }}
-            >
+            <FormControl style={{ maxWidth: 150, minWidth: 150 }}>
               <InputLabel id="demo-simple-select-label">
                 Select Model
               </InputLabel>
@@ -837,7 +835,7 @@ class SatVis extends Component {
             >
               Reset Data
             </Button>
-          </span>
+          </div>
         </div>
 
         <div
@@ -850,7 +848,9 @@ class SatVis extends Component {
         >
           <Card
             mb={4}
+            mr={4}
             style={{
+              width: '70%',
               display:
                 this.state.contentView === 'scatterplot' ? 'block' : 'none',
             }}
@@ -866,6 +866,7 @@ class SatVis extends Component {
             mr={4}
             style={{
               display: 'flex',
+              width: '70%',
               // flex: '1',
               flexDirection: 'column',
               display: this.state.contentView === 'earth' ? 'block' : 'none',
