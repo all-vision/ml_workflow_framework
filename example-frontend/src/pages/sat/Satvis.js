@@ -670,6 +670,7 @@ class SatVis extends Component {
           style={{
             marginTop: '2vh',
             marginBottom: '1vh',
+            display: 'flex',
           }}
         >
           <ToggleButtonGroup
@@ -685,147 +686,164 @@ class SatVis extends Component {
               3D-View
             </ToggleButton>
           </ToggleButtonGroup>
-          <FormControl
-            style={{ maxWidth: 150, minWidth: 150, marginLeft: '1.5vw' }}
+          <span
+            style={{
+              display:
+                this.state.contentView === 'scatterplot' ? 'flex' : 'none',
+            }}
           >
-            <InputLabel id="demo-simple-select-label">Select Model</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              multiple
-              defaultValue={'KMeans'}
-              style={{ overflowX: 'hidden' }}
-              onChange={(e) => this.handleFilterDataByCluster(e)}
-              value={this.state.selectedClusters}
+            <FormControl
+              style={{ maxWidth: 150, minWidth: 150, marginLeft: '1.5vw' }}
             >
-              {this.state.modelsNames.map((model, index) => {
-                return <MenuItem>{model.name}</MenuItem>;
-              })}
-            </Select>
-          </FormControl>
-          <FormControl
-            style={{ maxWidth: 150, minWidth: 150, marginLeft: '2vw' }}
-          >
-            <InputLabel id="demo-simple-select-label">
-              Filter Data By Cluster
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              multiple
-              style={{ overflowX: 'hidden' }}
-              onChange={(e) => this.handleFilterDataByCluster(e)}
-              value={this.state.selectedClusters}
+              <InputLabel id="demo-simple-select-label">
+                Select Model
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                multiple
+                defaultValue={'KMeans'}
+                style={{ overflowX: 'hidden' }}
+                onChange={(e) => this.handleFilterDataByCluster(e)}
+                value={this.state.selectedClusters}
+              >
+                {this.state.modelsNames.map((model, index) => {
+                  return <MenuItem>{model.name}</MenuItem>;
+                })}
+              </Select>
+            </FormControl>
+            <FormControl
+              style={{ maxWidth: 150, minWidth: 150, marginLeft: '2vw' }}
             >
-              <MenuItem value={'All Clusters'}>All Clusters</MenuItem>
-              {this.state.clusters.map((cluster, index) => {
-                if (cluster === -1) {
+              <InputLabel id="demo-simple-select-label">
+                Filter Data By Cluster
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                multiple
+                style={{ overflowX: 'hidden' }}
+                onChange={(e) => this.handleFilterDataByCluster(e)}
+                value={this.state.selectedClusters}
+              >
+                <MenuItem value={'All Clusters'}>All Clusters</MenuItem>
+                {this.state.clusters.map((cluster, index) => {
+                  if (cluster === -1) {
+                    return (
+                      <MenuItem value={cluster} key={index}>
+                        {`${cluster} (Anomaly)`}
+                      </MenuItem>
+                    );
+                  }
                   return (
-                    <MenuItem value={cluster} key={index}>
-                      {`${cluster} (Anomaly)`}
+                    <MenuItem
+                      value={cluster}
+                      key={index}
+                      style={{
+                        color: color_palette[cluster],
+                        fontWeight: '900',
+                      }}
+                    >
+                      {cluster}
                     </MenuItem>
                   );
-                }
-                return (
-                  <MenuItem
-                    value={cluster}
-                    key={index}
-                    style={{ color: color_palette[cluster], fontWeight: '900' }}
-                  >
-                    {cluster}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
+                })}
+              </Select>
+            </FormControl>
 
-          <FormControl
-            style={{ minWidth: 150, marginLeft: '2vw' }}
-            error={this.props.selectedXValueIsNull}
-          >
-            <InputLabel id="demo-simple-select-label">
-              Select X Value
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              style={{ overflowX: 'hidden' }}
-              // onChange={(e) => this.props.handleChangeXValue(e)}
-              onChange={(e) => this.handleChangeSelectedXValue(e.target.value)}
-              // onChange={(e) => this.setState({selectedXValue: e.target.value})}
-              value={this.state.selectedXValue}
+            <FormControl
+              style={{ minWidth: 150, marginLeft: '2vw' }}
+              error={this.props.selectedXValueIsNull}
             >
-              {this.state.columnNames.map((column, index) => {
-                return (
-                  <MenuItem value={column} key={index}>
-                    {column}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
-          <FormControl
-            style={{ minWidth: 150, marginLeft: '2vw' }}
-            // error={props.selectedYValueIsNull}
-          >
-            <InputLabel id="demo-simple-select-label">
-              Select Y Value
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              style={{ overflowX: 'hidden' }}
-              onChange={(e) => this.handleChangeSelectedYValue(e.target.value)}
-              value={this.state.selectedYValue}
-              // onChange={(e) => this.props.handleChangeYValue(e)}
-              // onChange={(e) => this.setState({selectedYValue: e.target.value})}
-              // onChange={(e) => setSelectedYValue(e.target.value)}
+              <InputLabel id="demo-simple-select-label">
+                Select X Value
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                style={{ overflowX: 'hidden' }}
+                // onChange={(e) => this.props.handleChangeXValue(e)}
+                onChange={(e) =>
+                  this.handleChangeSelectedXValue(e.target.value)
+                }
+                // onChange={(e) => this.setState({selectedXValue: e.target.value})}
+                value={this.state.selectedXValue}
+              >
+                {this.state.columnNames.map((column, index) => {
+                  return (
+                    <MenuItem value={column} key={index}>
+                      {column}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+            <FormControl
+              style={{ minWidth: 150, marginLeft: '2vw' }}
+              // error={props.selectedYValueIsNull}
             >
-              {this.state.columnNames.map((column, index) => {
-                return (
-                  <MenuItem value={column} key={index}>
-                    {column}
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
-          <Button
-            style={{
-              marginLeft: '1.5vw',
-              marginTop: '1vh',
-              color: '#fafafa',
-              background: '#1565C0',
-              fontFamily: 'Open Sans, Lato, Roboto',
-              textTransform: 'capitalize',
-              // fontSize: '.9rem',
-            }}
-            variant="contained"
-            color="primary"
-            onClick={() =>
-              this.handleSubmitXYValues(
-                this.state.selectedYValue,
-                this.state.selectedXValue
-              )
-            }
-          >
-            Submit New X & Y Values
-          </Button>
-          <Button
-            variant={'outlined'}
-            style={{
-              marginTop: '1vh',
-              marginLeft: '2vw',
-            }}
-            onClick={this.handleResetClusterData}
-          >
-            Reset Data
-          </Button>
+              <InputLabel id="demo-simple-select-label">
+                Select Y Value
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                style={{ overflowX: 'hidden' }}
+                onChange={(e) =>
+                  this.handleChangeSelectedYValue(e.target.value)
+                }
+                value={this.state.selectedYValue}
+                // onChange={(e) => this.props.handleChangeYValue(e)}
+                // onChange={(e) => this.setState({selectedYValue: e.target.value})}
+                // onChange={(e) => setSelectedYValue(e.target.value)}
+              >
+                {this.state.columnNames.map((column, index) => {
+                  return (
+                    <MenuItem value={column} key={index}>
+                      {column}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+            <Button
+              style={{
+                marginLeft: '1.5vw',
+                marginTop: '1vh',
+                color: '#fafafa',
+                background: '#1565C0',
+                fontFamily: 'Open Sans, Lato, Roboto',
+                textTransform: 'capitalize',
+                // fontSize: '.9rem',
+              }}
+              variant="contained"
+              color="primary"
+              onClick={() =>
+                this.handleSubmitXYValues(
+                  this.state.selectedYValue,
+                  this.state.selectedXValue
+                )
+              }
+            >
+              Submit New X & Y Values
+            </Button>
+            <Button
+              variant={'outlined'}
+              style={{
+                marginTop: '1vh',
+                marginLeft: '2vw',
+              }}
+              onClick={this.handleResetClusterData}
+            >
+              Reset Data
+            </Button>
+          </span>
         </div>
 
         <div
           style={{
             display: 'flex',
+            justifyContent: 'space-between',
             // flexDirection: this.screenWidth < 1900 ? 'column' : 'row',
             marginTop: '2vh',
           }}
@@ -845,7 +863,6 @@ class SatVis extends Component {
 
           <Card
             mb={4}
-            ml={4}
             mr={4}
             style={{
               display: 'flex',
@@ -861,9 +878,18 @@ class SatVis extends Component {
             <CardContent>
               <div
                 ref={(c) => (this.el = c)}
-                style={{ width: '100%', height: '100%' }}
+                // style={{ width: '100%', height: '100%' }}
               />
             </CardContent>
+          </Card>
+          <Card
+            mb={4}
+            ml={4}
+            style={{
+              flex: 1,
+            }}
+          >
+            <CardContent></CardContent>
           </Card>
         </div>
 
