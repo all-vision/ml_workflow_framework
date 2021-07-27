@@ -673,7 +673,7 @@ class SatVis extends Component {
           }}
         >
           <ToggleButtonGroup
-            value={this.contentView}
+            value={this.state.contentView}
             exclusive
             onChange={this.handleContentView}
             aria-label="text alignment"
@@ -685,7 +685,9 @@ class SatVis extends Component {
               3D-View
             </ToggleButton>
           </ToggleButtonGroup>
-          <FormControl style={{ maxWidth: 150, minWidth: 150 }}>
+          <FormControl
+            style={{ maxWidth: 150, minWidth: 150, marginLeft: '1.5vw' }}
+          >
             <InputLabel id="demo-simple-select-label">Select Model</InputLabel>
             <Select
               labelId="demo-simple-select-label"
