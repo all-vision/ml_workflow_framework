@@ -90,6 +90,34 @@ class SatVis extends Component {
     selectedYValueIsNull: false,
     selectedXValue: '',
     selectedYValue: '',
+    uncheckedAlerts: [
+      {
+        key: 1,
+        title: 'hi',
+        message: 'hi',
+        recommendation: 'hi',
+      },
+      {
+        key: 2,
+        title: 'hello',
+        message: 'hello',
+        recommendation: 'hello',
+      },
+      {
+        key: 3,
+        title: 'bye',
+        message: 'bye',
+        recommendation: 'bye',
+      },
+    ],
+    checkedAlerts: [
+      {
+        key: 0,
+        title: 'hi',
+        message: 'hi',
+        recommendation: 'hi',
+      },
+    ],
     modelsNames: [
       {
         name: 'Weighted_linkage',
@@ -636,6 +664,22 @@ class SatVis extends Component {
     });
   };
 
+  handleCheckAlert = (removeAlertObj) => {
+    let filteredUncheckedAlerts = this.state.uncheckedAlerts.filter(({key}) => {
+      return key !== removeAlertObj.key;
+    });
+
+    console.log(filteredUncheckedAlerts);
+    let newCheckedAlerts = [...this.state.checkedAlerts];
+    newCheckedAlerts.push(removeAlertObj);
+
+    this.setState({
+      ...this.state,
+      uncheckedAlerts: filteredUncheckedAlerts,
+      checkedAlerts: newCheckedAlerts,
+    })
+  } 
+
   render() {
     console.log('this.state: ', this.state);
     const { selected, stations } = this.state;
@@ -647,7 +691,7 @@ class SatVis extends Component {
           onResultClick={this.handleSearchResultClick}
         /> */}
         <Autocomplete
-          id="combo-box-demo"
+          id='combo-box-demo'
           // multiple
           disableCloseOnSelect
           onChange={this.handleTestSelection}
@@ -663,7 +707,7 @@ class SatVis extends Component {
           getOptionSelected={(station) => selected.includes(station)}
           style={{ width: 600, background: '#fff' }}
           renderInput={(params) => (
-            <TextField {...params} label="Select Stations" variant="outlined" />
+            <TextField {...params} label='Select Stations' variant='outlined' />
           )}
         />
         <div
@@ -677,12 +721,12 @@ class SatVis extends Component {
             value={this.state.contentView}
             exclusive
             onChange={this.handleContentView}
-            aria-label="text alignment"
+            aria-label='text alignment'
           >
-            <ToggleButton value="scatterplot" aria-label="scatter plot">
+            <ToggleButton value='scatterplot' aria-label='scatter plot'>
               Scatterplot
             </ToggleButton>
-            <ToggleButton value="earth" aria-label="earth">
+            <ToggleButton value='earth' aria-label='earth'>
               3D-View
             </ToggleButton>
           </ToggleButtonGroup>
@@ -693,12 +737,12 @@ class SatVis extends Component {
             }}
           >
             <FormControl style={{ maxWidth: 150, minWidth: 150 }}>
-              <InputLabel id="demo-simple-select-label">
+              <InputLabel id='demo-simple-select-label'>
                 Select Model
               </InputLabel>
               <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
+                labelId='demo-simple-select-label'
+                id='demo-simple-select'
                 multiple
                 defaultValue={'KMeans'}
                 style={{ overflowX: 'hidden' }}
@@ -713,12 +757,12 @@ class SatVis extends Component {
             <FormControl
               style={{ maxWidth: 150, minWidth: 150, marginLeft: '2vw' }}
             >
-              <InputLabel id="demo-simple-select-label">
+              <InputLabel id='demo-simple-select-label'>
                 Filter Data By Cluster
               </InputLabel>
               <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
+                labelId='demo-simple-select-label'
+                id='demo-simple-select'
                 multiple
                 style={{ overflowX: 'hidden' }}
                 onChange={(e) => this.handleFilterDataByCluster(e)}
@@ -753,12 +797,12 @@ class SatVis extends Component {
               style={{ minWidth: 150, marginLeft: '2vw' }}
               error={this.props.selectedXValueIsNull}
             >
-              <InputLabel id="demo-simple-select-label">
+              <InputLabel id='demo-simple-select-label'>
                 Select X Value
               </InputLabel>
               <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
+                labelId='demo-simple-select-label'
+                id='demo-simple-select'
                 style={{ overflowX: 'hidden' }}
                 // onChange={(e) => this.props.handleChangeXValue(e)}
                 onChange={(e) =>
@@ -780,12 +824,12 @@ class SatVis extends Component {
               style={{ minWidth: 150, marginLeft: '2vw' }}
               // error={props.selectedYValueIsNull}
             >
-              <InputLabel id="demo-simple-select-label">
+              <InputLabel id='demo-simple-select-label'>
                 Select Y Value
               </InputLabel>
               <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
+                labelId='demo-simple-select-label'
+                id='demo-simple-select'
                 style={{ overflowX: 'hidden' }}
                 onChange={(e) =>
                   this.handleChangeSelectedYValue(e.target.value)
@@ -814,8 +858,8 @@ class SatVis extends Component {
                 textTransform: 'capitalize',
                 // fontSize: '.9rem',
               }}
-              variant="contained"
-              color="primary"
+              variant='contained'
+              color='primary'
               onClick={() =>
                 this.handleSubmitXYValues(
                   this.state.selectedYValue,
@@ -873,7 +917,7 @@ class SatVis extends Component {
             }}
           >
             <div style={{ display: 'flex', flexDirection: 'row' }}>
-              <CardHeader title="Real-Time Satellites View" />
+              <CardHeader title='Real-Time Satellites View' />
             </div>
 
             <CardContent>
@@ -890,8 +934,92 @@ class SatVis extends Component {
               flex: 1,
             }}
           >
-            <CardContent></CardContent>
+            <CardContent>
+              <CardHeader title='Unchecked Alerts' />
+              {this.state.uncheckedAlerts.map(
+                (alertObj) => {
+                  return (
+                    <Alert
+                      mb={4}
+                      severity='error'
+                      action={
+                        <IconButton
+                          aria-label='close'
+                          color='inherit'
+                          size='small'
+                          onClick={() => {
+                            this.handleCheckAlert(alertObj);
+                          }}
+                        >
+                          <AddIcon fontSize='inherit' />
+                        </IconButton>
+                      }
+                    >
+                      <AlertTitle>{alertObj.title}</AlertTitle>
+                      {alertObj.message} — <strong>{alertObj.recommendation}</strong>
+                    </Alert>
+                  );
+                }
+              )}
+            </CardContent>
           </Card>
+        </div>
+
+        {/* Kanban */}
+        <div
+          style={{
+            display: 'flex',
+            border: 'black 1px solid'
+          }}
+        >
+          
+          <CardContent
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              flex: 1
+            }}
+          >
+            <CardHeader title='Unchecked Alerts' />
+            {this.state.uncheckedAlerts.map(
+              ({ title, message, recommendation }) => {
+                return (
+                  <Alert
+                    mb={4}
+                    severity='error'
+                  >
+                    <AlertTitle>{title}</AlertTitle>
+                    {message} — <strong>{recommendation}</strong>
+                  </Alert>
+                );
+              }
+            )}
+          </CardContent>
+
+          <CardContent
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              flex: 1
+            }}
+          >
+            <CardHeader title='Checked Alerts' />
+            {this.state.checkedAlerts.map(
+              ({ title, message, recommendation }) => {
+                return (
+                  <Alert
+                    mb={4}
+                    severity='success'
+                  >
+                    <AlertTitle>{title}</AlertTitle>
+                    {message} — <strong>{recommendation}</strong>
+                  </Alert>
+                );
+              }
+            )}
+
+
+          </CardContent>
         </div>
 
         <div
@@ -907,7 +1035,7 @@ class SatVis extends Component {
             mb={4}
             style={{ display: 'flex', flex: '2', flexDirection: 'column' }}
           >
-            <CardHeader title="Active Alerts" />
+            <CardHeader title='Active Alerts' />
             {/* <SelectedStations
                 selected={selected}
                 onRemoveStation={this.handleRemoveSelected}
@@ -916,19 +1044,19 @@ class SatVis extends Component {
             <CardContent>
               <Alert
                 mb={4}
-                severity="error"
+                severity='error'
                 action={
                   <IconButton
-                    aria-label="close"
-                    color="inherit"
-                    size="small"
+                    aria-label='close'
+                    color='inherit'
+                    size='small'
                     onClick={() => {
                       this.handleStationClicked(
                         this.filterResults(this.state.stations, 'Starlink-1532')
                       );
                     }}
                   >
-                    <AddIcon fontSize="inherit" />
+                    <AddIcon fontSize='inherit' />
                   </IconButton>
                 }
               >
@@ -941,19 +1069,19 @@ class SatVis extends Component {
 
               <Alert
                 mb={4}
-                severity="error"
+                severity='error'
                 action={
                   <IconButton
-                    aria-label="close"
-                    color="inherit"
-                    size="small"
+                    aria-label='close'
+                    color='inherit'
+                    size='small'
                     onClick={() => {
                       this.handleStationClicked(
                         this.filterResults(this.state.stations, 'BEIDOU-3 M14')
                       );
                     }}
                   >
-                    <AddIcon fontSize="inherit" />
+                    <AddIcon fontSize='inherit' />
                   </IconButton>
                 }
               >
@@ -964,19 +1092,19 @@ class SatVis extends Component {
 
               <Alert
                 mb={4}
-                severity="error"
+                severity='error'
                 action={
                   <IconButton
-                    aria-label="close"
-                    color="inherit"
-                    size="small"
+                    aria-label='close'
+                    color='inherit'
+                    size='small'
                     onClick={() => {
                       this.handleStationClicked(
                         this.filterResults(this.state.stations, 'Starlink-1532')
                       );
                     }}
                   >
-                    <AddIcon fontSize="inherit" />
+                    <AddIcon fontSize='inherit' />
                   </IconButton>
                 }
               >
@@ -987,19 +1115,19 @@ class SatVis extends Component {
 
               <Alert
                 mb={4}
-                severity="success"
+                severity='success'
                 action={
                   <IconButton
-                    aria-label="close"
-                    color="inherit"
-                    size="small"
+                    aria-label='close'
+                    color='inherit'
+                    size='small'
                     onClick={() => {
                       this.handleStationClicked(
                         this.filterResults(this.state.stations, 'REMOVEDEBRI')
                       );
                     }}
                   >
-                    <AddIcon fontSize="inherit" />
+                    <AddIcon fontSize='inherit' />
                   </IconButton>
                 }
               >
@@ -1013,13 +1141,13 @@ class SatVis extends Component {
             ml={4}
             style={{ display: 'flex', flex: '1', flexDirection: 'column' }}
           >
-            <CardHeader title="Selected Satellites" />
+            <CardHeader title='Selected Satellites' />
             <CardContent>
               {this.state.selected.length > 0 ? (
                 <Button
                   onClick={() => this.handleRemoveAllSelected()}
                   variant={'outlined'}
-                  color="primary"
+                  color='primary'
                 >
                   Clear all selected satellites
                 </Button>
@@ -1035,22 +1163,17 @@ class SatVis extends Component {
                       <Alert
                         m={2}
                         // style={{width: '80%'}}
-                        severity="info"
+                        severity='info'
                         action={
                           <IconButton
-                            aria-label="close"
-                            color="inherit"
-                            size="small"
-                            // onClick={() => {
-                            //   this.handleStationClicked(
-                            //     this.filterResults(this.state.stations, "REMOVEDEBRI")
-                            //   );
-                            // }}
+                            aria-label='close'
+                            color='inherit'
+                            size='small'
                             onClick={() =>
                               this.handleRemoveSelected(selectedStation)
                             }
                           >
-                            <CloseIcon fontSize="inherit" />
+                            <CloseIcon fontSize='inherit' />
                           </IconButton>
                         }
                       >
@@ -1062,18 +1185,6 @@ class SatVis extends Component {
                           <strong>tle2:</strong> {selectedStation.tle2}
                         </p>
                       </Alert>
-                      // <Card m={2}>
-                      //   <h3>{selectedStation.name}</h3>
-                      //   <h3>tle1: {selectedStation.tle1}</h3>
-                      //   <h3>tle2: {selectedStation.tle2}</h3>
-                      //   <button
-                      //     onClick={() =>
-                      //       this.handleRemoveSelected(selectedStation)
-                      //     }
-                      //   >
-                      //     remove
-                      //   </button>
-                      // </Card>
                     );
                   })
                 ) : (
