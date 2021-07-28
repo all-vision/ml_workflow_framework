@@ -665,9 +665,11 @@ class SatVis extends Component {
   };
 
   handleCheckAlert = (removeAlertObj) => {
-    let filteredUncheckedAlerts = this.state.uncheckedAlerts.filter(({key}) => {
-      return key !== removeAlertObj.key;
-    });
+    let filteredUncheckedAlerts = this.state.uncheckedAlerts.filter(
+      ({ key }) => {
+        return key !== removeAlertObj.key;
+      }
+    );
 
     console.log(filteredUncheckedAlerts);
     let newCheckedAlerts = [...this.state.checkedAlerts];
@@ -677,8 +679,8 @@ class SatVis extends Component {
       ...this.state,
       uncheckedAlerts: filteredUncheckedAlerts,
       checkedAlerts: newCheckedAlerts,
-    })
-  } 
+    });
+  };
 
   render() {
     console.log('this.state: ', this.state);
@@ -690,26 +692,7 @@ class SatVis extends Component {
           stations={stations}
           onResultClick={this.handleSearchResultClick}
         /> */}
-        <Autocomplete
-          id='combo-box-demo'
-          // multiple
-          disableCloseOnSelect
-          onChange={this.handleTestSelection}
-          // options={this.state.stations}
-          options={
-            this.state.selectedClusters.length > 0
-              ? this.state.filteredStations.filter(
-                  (station) => !(station.orbitMinutes > 0)
-                )
-              : this.state.stations
-          }
-          getOptionLabel={(station) => station.name}
-          getOptionSelected={(station) => selected.includes(station)}
-          style={{ width: 600, background: '#fff' }}
-          renderInput={(params) => (
-            <TextField {...params} label='Select Stations' variant='outlined' />
-          )}
-        />
+
         <div
           style={{
             marginTop: '2vh',
@@ -722,6 +705,9 @@ class SatVis extends Component {
             exclusive
             onChange={this.handleContentView}
             aria-label='text alignment'
+            style={{
+              marginBottom: '10px',
+            }}
           >
             <ToggleButton value='scatterplot' aria-label='scatter plot'>
               Scatterplot
@@ -730,6 +716,39 @@ class SatVis extends Component {
               3D-View
             </ToggleButton>
           </ToggleButtonGroup>
+          <div
+            style={{
+              
+              display:
+                this.state.contentView === 'earth' ? 'flex' : 'none',
+            }}
+          >
+            <Autocomplete
+              id='combo-box-demo'
+              // multiple
+              disableCloseOnSelect
+              onChange={this.handleTestSelection}
+              // options={this.state.stations}
+              options={
+                this.state.selectedClusters.length > 0
+                  ? this.state.filteredStations.filter(
+                      (station) => !(station.orbitMinutes > 0)
+                    )
+                  : this.state.stations
+              }
+              getOptionLabel={(station) => station.name}
+              getOptionSelected={(station) => selected.includes(station)}
+              style={{ width: 600, background: '#fff' }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label='Select Stations'
+                  variant='outlined'
+                />
+              )}
+            />
+          </div>
+
           <div
             style={{
               display:
@@ -936,31 +955,30 @@ class SatVis extends Component {
           >
             <CardContent>
               <CardHeader title='Unchecked Alerts' />
-              {this.state.uncheckedAlerts.map(
-                (alertObj) => {
-                  return (
-                    <Alert
-                      mb={4}
-                      severity='error'
-                      action={
-                        <IconButton
-                          aria-label='close'
-                          color='inherit'
-                          size='small'
-                          onClick={() => {
-                            this.handleCheckAlert(alertObj);
-                          }}
-                        >
-                          <AddIcon fontSize='inherit' />
-                        </IconButton>
-                      }
-                    >
-                      <AlertTitle>{alertObj.title}</AlertTitle>
-                      {alertObj.message} — <strong>{alertObj.recommendation}</strong>
-                    </Alert>
-                  );
-                }
-              )}
+              {this.state.uncheckedAlerts.map((alertObj) => {
+                return (
+                  <Alert
+                    mb={4}
+                    severity='error'
+                    action={
+                      <IconButton
+                        aria-label='close'
+                        color='inherit'
+                        size='small'
+                        onClick={() => {
+                          this.handleCheckAlert(alertObj);
+                        }}
+                      >
+                        <AddIcon fontSize='inherit' />
+                      </IconButton>
+                    }
+                  >
+                    <AlertTitle>{alertObj.title}</AlertTitle>
+                    {alertObj.message} —{' '}
+                    <strong>{alertObj.recommendation}</strong>
+                  </Alert>
+                );
+              })}
             </CardContent>
           </Card>
         </div>
@@ -969,25 +987,21 @@ class SatVis extends Component {
         <div
           style={{
             display: 'flex',
-            border: 'black 1px solid'
+            border: 'black 1px solid',
           }}
         >
-          
           <CardContent
             style={{
               display: 'flex',
               flexDirection: 'column',
-              flex: 1
+              flex: 1,
             }}
           >
             <CardHeader title='Unchecked Alerts' />
             {this.state.uncheckedAlerts.map(
               ({ title, message, recommendation }) => {
                 return (
-                  <Alert
-                    mb={4}
-                    severity='error'
-                  >
+                  <Alert mb={4} severity='error'>
                     <AlertTitle>{title}</AlertTitle>
                     {message} — <strong>{recommendation}</strong>
                   </Alert>
@@ -1000,25 +1014,20 @@ class SatVis extends Component {
             style={{
               display: 'flex',
               flexDirection: 'column',
-              flex: 1
+              flex: 1,
             }}
           >
             <CardHeader title='Checked Alerts' />
             {this.state.checkedAlerts.map(
               ({ title, message, recommendation }) => {
                 return (
-                  <Alert
-                    mb={4}
-                    severity='success'
-                  >
+                  <Alert mb={4} severity='success'>
                     <AlertTitle>{title}</AlertTitle>
                     {message} — <strong>{recommendation}</strong>
                   </Alert>
                 );
               }
             )}
-
-
           </CardContent>
         </div>
 
