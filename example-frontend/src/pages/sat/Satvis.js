@@ -90,34 +90,6 @@ class SatVis extends Component {
     selectedYValueIsNull: false,
     selectedXValue: '',
     selectedYValue: '',
-    uncheckedAlerts: [
-      {
-        key: 1,
-        title: 'hi',
-        message: 'hi',
-        recommendation: 'hi',
-      },
-      {
-        key: 2,
-        title: 'hello',
-        message: 'hello',
-        recommendation: 'hello',
-      },
-      {
-        key: 3,
-        title: 'bye',
-        message: 'bye',
-        recommendation: 'bye',
-      },
-    ],
-    checkedAlerts: [
-      {
-        key: 0,
-        title: 'hi',
-        message: 'hi',
-        recommendation: 'hi',
-      },
-    ],
     modelsNames: [
       {
         name: 'Weighted_linkage',
@@ -664,22 +636,6 @@ class SatVis extends Component {
     });
   };
 
-  handleCheckAlert = (removeAlertObj) => {
-    let filteredUncheckedAlerts = this.state.uncheckedAlerts.filter(({key}) => {
-      return key !== removeAlertObj.key;
-    });
-
-    console.log(filteredUncheckedAlerts);
-    let newCheckedAlerts = [...this.state.checkedAlerts];
-    newCheckedAlerts.push(removeAlertObj);
-
-    this.setState({
-      ...this.state,
-      uncheckedAlerts: filteredUncheckedAlerts,
-      checkedAlerts: newCheckedAlerts,
-    })
-  } 
-
   render() {
     console.log('this.state: ', this.state);
     const { selected, stations } = this.state;
@@ -690,196 +646,220 @@ class SatVis extends Component {
           stations={stations}
           onResultClick={this.handleSearchResultClick}
         /> */}
-        <Autocomplete
-          id='combo-box-demo'
-          // multiple
-          disableCloseOnSelect
-          onChange={this.handleTestSelection}
-          // options={this.state.stations}
-          options={
-            this.state.selectedClusters.length > 0
-              ? this.state.filteredStations.filter(
-                  (station) => !(station.orbitMinutes > 0)
-                )
-              : this.state.stations
-          }
-          getOptionLabel={(station) => station.name}
-          getOptionSelected={(station) => selected.includes(station)}
-          style={{ width: 600, background: '#fff' }}
-          renderInput={(params) => (
-            <TextField {...params} label='Select Stations' variant='outlined' />
-          )}
-        />
+
+        <ToggleButtonGroup
+          value={this.state.contentView}
+          exclusive
+          onChange={this.handleContentView}
+          aria-label="text alignment"
+          style={{
+            marginTop: '2vh',
+          }}
+        >
+          <ToggleButton value="scatterplot" aria-label="scatter plot">
+            Scatterplot
+          </ToggleButton>
+          <ToggleButton value="earth" aria-label="earth">
+            3D-View
+          </ToggleButton>
+        </ToggleButtonGroup>
+
         <div
           style={{
             marginTop: '2vh',
             marginBottom: '1vh',
-            // display: 'flex',
+            display: 'flex',
           }}
         >
-          <ToggleButtonGroup
-            value={this.state.contentView}
-            exclusive
-            onChange={this.handleContentView}
-            aria-label='text alignment'
-          >
-            <ToggleButton value='scatterplot' aria-label='scatter plot'>
-              Scatterplot
-            </ToggleButton>
-            <ToggleButton value='earth' aria-label='earth'>
-              3D-View
-            </ToggleButton>
-          </ToggleButtonGroup>
-          <div
+          <FormControl
             style={{
+              maxWidth: 150,
+              minWidth: 150,
               display:
                 this.state.contentView === 'scatterplot' ? 'flex' : 'none',
             }}
           >
-            <FormControl style={{ maxWidth: 150, minWidth: 150 }}>
-              <InputLabel id='demo-simple-select-label'>
-                Select Model
-              </InputLabel>
-              <Select
-                labelId='demo-simple-select-label'
-                id='demo-simple-select'
-                multiple
-                defaultValue={'KMeans'}
-                style={{ overflowX: 'hidden' }}
-                onChange={(e) => this.handleFilterDataByCluster(e)}
-                value={this.state.selectedClusters}
-              >
-                {this.state.modelsNames.map((model, index) => {
-                  return <MenuItem>{model.name}</MenuItem>;
-                })}
-              </Select>
-            </FormControl>
-            <FormControl
-              style={{ maxWidth: 150, minWidth: 150, marginLeft: '2vw' }}
+            <InputLabel id="demo-simple-select-label">Select Model</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              multiple
+              defaultValue={'KMeans'}
+              style={{ overflowX: 'hidden' }}
+              onChange={(e) => this.handleFilterDataByCluster(e)}
+              value={this.state.selectedClusters}
             >
-              <InputLabel id='demo-simple-select-label'>
-                Filter Data By Cluster
-              </InputLabel>
-              <Select
-                labelId='demo-simple-select-label'
-                id='demo-simple-select'
-                multiple
-                style={{ overflowX: 'hidden' }}
-                onChange={(e) => this.handleFilterDataByCluster(e)}
-                value={this.state.selectedClusters}
-              >
-                <MenuItem value={'All Clusters'}>All Clusters</MenuItem>
-                {this.state.clusters.map((cluster, index) => {
-                  if (cluster === -1) {
-                    return (
-                      <MenuItem value={cluster} key={index}>
-                        {`${cluster} (Anomaly)`}
-                      </MenuItem>
-                    );
-                  }
+              {this.state.modelsNames.map((model, index) => {
+                return <MenuItem>{model.name}</MenuItem>;
+              })}
+            </Select>
+          </FormControl>
+          <Autocomplete
+            id="combo-box-demo"
+            // multiple
+            disableCloseOnSelect
+            onChange={this.handleTestSelection}
+            // options={this.state.stations}
+            options={
+              this.state.selectedClusters.length > 0
+                ? this.state.filteredStations.filter(
+                    (station) => !(station.orbitMinutes > 0)
+                  )
+                : this.state.stations
+            }
+            getOptionLabel={(station) => station.name}
+            getOptionSelected={(station) => selected.includes(station)}
+            style={{
+              width: 600,
+              background: '#fff',
+              display: this.state.contentView === 'earth' ? 'block' : 'none',
+              marginRight: '1vh'
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Select Stations"
+                variant="outlined"
+              />
+            )}
+          />
+          <FormControl
+            style={{
+              width: '200px',
+              marginLeft:
+                this.state.contentView === 'scatterplot' ? '2vw' : '0',
+            }}
+          >
+            <InputLabel id="demo-simple-select-label">
+              Filter Data By Cluster
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              multiple
+              style={{ overflowX: 'hidden' }}
+              onChange={(e) => this.handleFilterDataByCluster(e)}
+              value={this.state.selectedClusters}
+            >
+              <MenuItem value={'All Clusters'}>All Clusters</MenuItem>
+              {this.state.clusters.map((cluster, index) => {
+                if (cluster === -1) {
                   return (
-                    <MenuItem
-                      value={cluster}
-                      key={index}
-                      style={{
-                        color: color_palette[cluster],
-                        fontWeight: '900',
-                      }}
-                    >
-                      {cluster}
+                    <MenuItem value={cluster} key={index}>
+                      {`${cluster} (Anomaly)`}
                     </MenuItem>
                   );
-                })}
-              </Select>
-            </FormControl>
+                }
+                return (
+                  <MenuItem
+                    value={cluster}
+                    key={index}
+                    style={{
+                      color: color_palette[cluster],
+                      fontWeight: '900',
+                    }}
+                  >
+                    {cluster}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
 
-            <FormControl
-              style={{ minWidth: 150, marginLeft: '2vw' }}
-              error={this.props.selectedXValueIsNull}
+          <FormControl
+            style={{
+              minWidth: 150,
+              marginLeft: '2vw',
+              display:
+                this.state.contentView === 'scatterplot' ? 'flex' : 'none',
+            }}
+            error={this.props.selectedXValueIsNull}
+          >
+            <InputLabel id="demo-simple-select-label">
+              Select X Value
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              style={{ overflowX: 'hidden' }}
+              // onChange={(e) => this.props.handleChangeXValue(e)}
+              onChange={(e) => this.handleChangeSelectedXValue(e.target.value)}
+              // onChange={(e) => this.setState({selectedXValue: e.target.value})}
+              value={this.state.selectedXValue}
             >
-              <InputLabel id='demo-simple-select-label'>
-                Select X Value
-              </InputLabel>
-              <Select
-                labelId='demo-simple-select-label'
-                id='demo-simple-select'
-                style={{ overflowX: 'hidden' }}
-                // onChange={(e) => this.props.handleChangeXValue(e)}
-                onChange={(e) =>
-                  this.handleChangeSelectedXValue(e.target.value)
-                }
-                // onChange={(e) => this.setState({selectedXValue: e.target.value})}
-                value={this.state.selectedXValue}
-              >
-                {this.state.columnNames.map((column, index) => {
-                  return (
-                    <MenuItem value={column} key={index}>
-                      {column}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
-            <FormControl
-              style={{ minWidth: 150, marginLeft: '2vw' }}
-              // error={props.selectedYValueIsNull}
+              {this.state.columnNames.map((column, index) => {
+                return (
+                  <MenuItem value={column} key={index}>
+                    {column}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+          <FormControl
+            style={{
+              minWidth: 150,
+              marginLeft: '2vw',
+              display:
+                this.state.contentView === 'scatterplot' ? 'flex' : 'none',
+            }}
+            // error={props.selectedYValueIsNull}
+          >
+            <InputLabel id="demo-simple-select-label">
+              Select Y Value
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              style={{ overflowX: 'hidden' }}
+              onChange={(e) => this.handleChangeSelectedYValue(e.target.value)}
+              value={this.state.selectedYValue}
+              // onChange={(e) => this.props.handleChangeYValue(e)}
+              // onChange={(e) => this.setState({selectedYValue: e.target.value})}
+              // onChange={(e) => setSelectedYValue(e.target.value)}
             >
-              <InputLabel id='demo-simple-select-label'>
-                Select Y Value
-              </InputLabel>
-              <Select
-                labelId='demo-simple-select-label'
-                id='demo-simple-select'
-                style={{ overflowX: 'hidden' }}
-                onChange={(e) =>
-                  this.handleChangeSelectedYValue(e.target.value)
-                }
-                value={this.state.selectedYValue}
-                // onChange={(e) => this.props.handleChangeYValue(e)}
-                // onChange={(e) => this.setState({selectedYValue: e.target.value})}
-                // onChange={(e) => setSelectedYValue(e.target.value)}
-              >
-                {this.state.columnNames.map((column, index) => {
-                  return (
-                    <MenuItem value={column} key={index}>
-                      {column}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
-            <Button
-              style={{
-                marginLeft: '1.5vw',
-                marginTop: '1vh',
-                color: '#fafafa',
-                background: '#1565C0',
-                fontFamily: 'Open Sans, Lato, Roboto',
-                textTransform: 'capitalize',
-                // fontSize: '.9rem',
-              }}
-              variant='contained'
-              color='primary'
-              onClick={() =>
-                this.handleSubmitXYValues(
-                  this.state.selectedYValue,
-                  this.state.selectedXValue
-                )
-              }
-            >
-              Submit New X & Y Values
-            </Button>
-            <Button
-              variant={'outlined'}
-              style={{
-                marginTop: '1vh',
-                marginLeft: '2vw',
-              }}
-              onClick={this.handleResetClusterData}
-            >
-              Reset Data
-            </Button>
-          </div>
+              {this.state.columnNames.map((column, index) => {
+                return (
+                  <MenuItem value={column} key={index}>
+                    {column}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+          <Button
+            style={{
+              marginLeft: '1.5vw',
+              marginTop: '1vh',
+              color: '#fafafa',
+              background: '#1565C0',
+              fontFamily: 'Open Sans, Lato, Roboto',
+              textTransform: 'capitalize',
+              display:
+                this.state.contentView === 'scatterplot' ? 'flex' : 'none',
+              // fontSize: '.9rem',
+            }}
+            variant="contained"
+            color="primary"
+            onClick={() =>
+              this.handleSubmitXYValues(
+                this.state.selectedYValue,
+                this.state.selectedXValue
+              )
+            }
+          >
+            Submit Changes
+          </Button>
+          <Button
+            variant={'outlined'}
+            style={{
+              marginTop: '1vh',
+              marginLeft: '2vw',
+            }}
+            onClick={this.handleResetClusterData}
+          >
+            Reset Data
+          </Button>
         </div>
 
         <div
@@ -917,7 +897,7 @@ class SatVis extends Component {
             }}
           >
             <div style={{ display: 'flex', flexDirection: 'row' }}>
-              <CardHeader title='Real-Time Satellites View' />
+              <CardHeader title="Real-Time Satellites View" />
             </div>
 
             <CardContent>
@@ -934,92 +914,8 @@ class SatVis extends Component {
               flex: 1,
             }}
           >
-            <CardContent>
-              <CardHeader title='Unchecked Alerts' />
-              {this.state.uncheckedAlerts.map(
-                (alertObj) => {
-                  return (
-                    <Alert
-                      mb={4}
-                      severity='error'
-                      action={
-                        <IconButton
-                          aria-label='close'
-                          color='inherit'
-                          size='small'
-                          onClick={() => {
-                            this.handleCheckAlert(alertObj);
-                          }}
-                        >
-                          <AddIcon fontSize='inherit' />
-                        </IconButton>
-                      }
-                    >
-                      <AlertTitle>{alertObj.title}</AlertTitle>
-                      {alertObj.message} — <strong>{alertObj.recommendation}</strong>
-                    </Alert>
-                  );
-                }
-              )}
-            </CardContent>
+            <CardContent></CardContent>
           </Card>
-        </div>
-
-        {/* Kanban */}
-        <div
-          style={{
-            display: 'flex',
-            border: 'black 1px solid'
-          }}
-        >
-          
-          <CardContent
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              flex: 1
-            }}
-          >
-            <CardHeader title='Unchecked Alerts' />
-            {this.state.uncheckedAlerts.map(
-              ({ title, message, recommendation }) => {
-                return (
-                  <Alert
-                    mb={4}
-                    severity='error'
-                  >
-                    <AlertTitle>{title}</AlertTitle>
-                    {message} — <strong>{recommendation}</strong>
-                  </Alert>
-                );
-              }
-            )}
-          </CardContent>
-
-          <CardContent
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              flex: 1
-            }}
-          >
-            <CardHeader title='Checked Alerts' />
-            {this.state.checkedAlerts.map(
-              ({ title, message, recommendation }) => {
-                return (
-                  <Alert
-                    mb={4}
-                    severity='success'
-                  >
-                    <AlertTitle>{title}</AlertTitle>
-                    {message} — <strong>{recommendation}</strong>
-                  </Alert>
-                );
-              }
-            )}
-
-
-          </CardContent>
         </div>
 
         <div
@@ -1035,7 +931,7 @@ class SatVis extends Component {
             mb={4}
             style={{ display: 'flex', flex: '2', flexDirection: 'column' }}
           >
-            <CardHeader title='Active Alerts' />
+            <CardHeader title="Active Alerts" />
             {/* <SelectedStations
                 selected={selected}
                 onRemoveStation={this.handleRemoveSelected}
@@ -1044,19 +940,19 @@ class SatVis extends Component {
             <CardContent>
               <Alert
                 mb={4}
-                severity='error'
+                severity="error"
                 action={
                   <IconButton
-                    aria-label='close'
-                    color='inherit'
-                    size='small'
+                    aria-label="close"
+                    color="inherit"
+                    size="small"
                     onClick={() => {
                       this.handleStationClicked(
                         this.filterResults(this.state.stations, 'Starlink-1532')
                       );
                     }}
                   >
-                    <AddIcon fontSize='inherit' />
+                    <AddIcon fontSize="inherit" />
                   </IconButton>
                 }
               >
@@ -1069,19 +965,19 @@ class SatVis extends Component {
 
               <Alert
                 mb={4}
-                severity='error'
+                severity="error"
                 action={
                   <IconButton
-                    aria-label='close'
-                    color='inherit'
-                    size='small'
+                    aria-label="close"
+                    color="inherit"
+                    size="small"
                     onClick={() => {
                       this.handleStationClicked(
                         this.filterResults(this.state.stations, 'BEIDOU-3 M14')
                       );
                     }}
                   >
-                    <AddIcon fontSize='inherit' />
+                    <AddIcon fontSize="inherit" />
                   </IconButton>
                 }
               >
@@ -1092,19 +988,19 @@ class SatVis extends Component {
 
               <Alert
                 mb={4}
-                severity='error'
+                severity="error"
                 action={
                   <IconButton
-                    aria-label='close'
-                    color='inherit'
-                    size='small'
+                    aria-label="close"
+                    color="inherit"
+                    size="small"
                     onClick={() => {
                       this.handleStationClicked(
                         this.filterResults(this.state.stations, 'Starlink-1532')
                       );
                     }}
                   >
-                    <AddIcon fontSize='inherit' />
+                    <AddIcon fontSize="inherit" />
                   </IconButton>
                 }
               >
@@ -1115,19 +1011,19 @@ class SatVis extends Component {
 
               <Alert
                 mb={4}
-                severity='success'
+                severity="success"
                 action={
                   <IconButton
-                    aria-label='close'
-                    color='inherit'
-                    size='small'
+                    aria-label="close"
+                    color="inherit"
+                    size="small"
                     onClick={() => {
                       this.handleStationClicked(
                         this.filterResults(this.state.stations, 'REMOVEDEBRI')
                       );
                     }}
                   >
-                    <AddIcon fontSize='inherit' />
+                    <AddIcon fontSize="inherit" />
                   </IconButton>
                 }
               >
@@ -1141,13 +1037,13 @@ class SatVis extends Component {
             ml={4}
             style={{ display: 'flex', flex: '1', flexDirection: 'column' }}
           >
-            <CardHeader title='Selected Satellites' />
+            <CardHeader title="Selected Satellites" />
             <CardContent>
               {this.state.selected.length > 0 ? (
                 <Button
                   onClick={() => this.handleRemoveAllSelected()}
                   variant={'outlined'}
-                  color='primary'
+                  color="primary"
                 >
                   Clear all selected satellites
                 </Button>
@@ -1163,17 +1059,22 @@ class SatVis extends Component {
                       <Alert
                         m={2}
                         // style={{width: '80%'}}
-                        severity='info'
+                        severity="info"
                         action={
                           <IconButton
-                            aria-label='close'
-                            color='inherit'
-                            size='small'
+                            aria-label="close"
+                            color="inherit"
+                            size="small"
+                            // onClick={() => {
+                            //   this.handleStationClicked(
+                            //     this.filterResults(this.state.stations, "REMOVEDEBRI")
+                            //   );
+                            // }}
                             onClick={() =>
                               this.handleRemoveSelected(selectedStation)
                             }
                           >
-                            <CloseIcon fontSize='inherit' />
+                            <CloseIcon fontSize="inherit" />
                           </IconButton>
                         }
                       >
@@ -1185,6 +1086,18 @@ class SatVis extends Component {
                           <strong>tle2:</strong> {selectedStation.tle2}
                         </p>
                       </Alert>
+                      // <Card m={2}>
+                      //   <h3>{selectedStation.name}</h3>
+                      //   <h3>tle1: {selectedStation.tle1}</h3>
+                      //   <h3>tle2: {selectedStation.tle2}</h3>
+                      //   <button
+                      //     onClick={() =>
+                      //       this.handleRemoveSelected(selectedStation)
+                      //     }
+                      //   >
+                      //     remove
+                      //   </button>
+                      // </Card>
                     );
                   })
                 ) : (
